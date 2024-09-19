@@ -126,6 +126,7 @@ const HomePage = () => {
             <TableHead>
               <TableRow>
                 <TableCell><strong>Nome</strong></TableCell>
+                <TableCell><strong>Idade</strong></TableCell>
                 <TableCell><strong>Cidade/UF</strong></TableCell>
                 <TableCell align="center"><strong>Ações</strong></TableCell>
               </TableRow>
@@ -135,6 +136,7 @@ const HomePage = () => {
               {data.map((u) => (
                 <TableRow key={u.id} hover>
                   <TableCell>{u.nome}</TableCell>
+                  <TableCell>{u.idade}</TableCell>
                   <TableCell>
                     {u.cidade}/{u.uf}
                   </TableCell>

@@ -8,6 +8,7 @@ import {
 import { actions } from "../reducers/user.actions";
 import { request } from "../utils/api";
 import usersMock from "./users.mock";
+import { calculateAge } from "../utils/ageCalculator";
 
 function* userRouteWatcher() {
   yield routeWatcher(routes.USER, function* () {
@@ -28,6 +29,15 @@ const loadUser = asyncFlow({
       isMock: true,
       mockResult: usersMock.find((u) => u.id === values.id) ?? null,
     });
+  },
+  preSuccess: function* ({ response }) {
+    const user = response.data;
+    if (user) {
+      response.data = {
+        ...user,
+        idade: calculateAge(user.dataNascimento),
+      };
+    }
   },
   postSuccess: function* ({ response }) {
     console.log({ user: response.data });
