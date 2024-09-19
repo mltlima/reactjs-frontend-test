@@ -8,6 +8,7 @@ const ControlledTextField = ({
   name,
   validationKey,
   ignoreError = false,
+  InputComponent,
   ...otherProps
 }) => {
   const {
@@ -54,6 +55,10 @@ const ControlledTextField = ({
             if (!!otherProps.onBlur) {
               otherProps.onBlur(value);
             }
+          }}
+          InputProps={{
+            ...otherProps.InputProps,
+            inputComponent: InputComponent,
           }}
         />
       )}
