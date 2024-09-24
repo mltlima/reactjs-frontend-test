@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { actions as homeActions } from "../reducers/home.actions";
 import {
   actions as routeActions,
   types as routes,
@@ -40,7 +41,7 @@ const HomePage = () => {
   const handleDelete = (id) => {
     if (window.confirm("Tem certeza que deseja excluir este usuário?")) {
       // Dispatch para deletar o usuário
-      dispatch(routeActions.deleteUser(id));
+      dispatch(homeActions.deleteUser.request(id));
       setSnackbar({
         open: true,
         message: "Usuário excluído com sucesso!",

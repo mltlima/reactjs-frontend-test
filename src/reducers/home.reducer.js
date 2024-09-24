@@ -18,6 +18,24 @@ const reducer = (state = initialState, action) => {
             ? action.payload.response.data
             : [],
       };
+      case actions.deleteUser.REQUEST:
+      return {
+        ...state,
+        loading: true,
+      };
+
+    case actions.deleteUser.SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        data: state.data.filter((user) => user.id !== action.payload.id),
+      };
+    case actions.deleteUser.FAILURE:
+      return {
+        ...state,
+        loading: false,
+      };
+
     default:
       return state;
   }

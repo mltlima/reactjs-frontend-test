@@ -37,4 +37,23 @@ const loadUsers = asyncFlow({
   },
 });
 
-export const sagas = [homeRouteWatcher(), loadUsers.watcher()];
+
+const deleteUser = asyncFlow({
+  actionGenerator: actions.deleteUser,
+  api: ({ id }) => {
+    return request({
+      url: `/usuarios/${id}`,
+      method: "delete",
+      isMock: true,
+      mockResult: { success: true },
+    });
+  },
+  preSuccess: function* ({ payload, response }) {
+    response.id = payload.id;
+  },
+  postSuccess: function* ({ payload }) {
+    console.log(`Usuário com id ${payload.id} foi excluído.`);
+  },
+});
+
+export const sagas = [homeRouteWatcher(), loadUsers.watcher(), deleteUser.watcher()];
