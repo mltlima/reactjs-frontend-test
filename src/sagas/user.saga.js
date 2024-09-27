@@ -48,7 +48,6 @@ const saveUser = asyncFlow({
     return { id, ...payload };
   },
   api: ({ id, ...values }) => {
-    console.log("---------------------------------> values", values);
     const cleanedValues = Object.entries(values).reduce((acc, [key, value]) => {
       if (value !== "" && value !== null && value !== undefined) {
         acc[key] = value;

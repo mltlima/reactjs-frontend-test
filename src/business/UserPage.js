@@ -16,6 +16,7 @@ import {
   Snackbar,
   Alert,
 } from "@mui/material";
+import Header from "./Header";
 
 const UserPage = () => {
   const dispatch = useDispatch();
@@ -97,6 +98,8 @@ const UserPage = () => {
   }
 
   return (
+    <>
+    <Header />
     <Container maxWidth="md" sx={{ mt: 4 }}>
       <Paper elevation={3} sx={{ p: 4 }}>
         <Typography variant="h4" gutterBottom>
@@ -175,6 +178,7 @@ const UserPage = () => {
         </Alert>
       </Snackbar>
     </Container>
+    </>
   );
 };
 

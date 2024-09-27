@@ -26,6 +26,7 @@ import {
   Snackbar,
   Alert,
 } from "@mui/material";
+import Header from "./Header";
 
 const HomePage = () => {
   const dispatch = useDispatch();
@@ -57,17 +58,7 @@ const HomePage = () => {
   if (loading) {
     return (
       <>
-        {/* Header */}
-        <AppBar position="static" sx={{ marginBottom: 4 }}>
-          <Toolbar>
-            <Typography variant="h6" sx={{ flexGrow: 1 }}>
-              Taya Management
-            </Typography>
-            <Button color="inherit" onClick={() => { /* Ação para adicionar usuário */ }}>
-              Adicionar Usuário
-            </Button>
-          </Toolbar>
-        </AppBar>
+      <Header />
 
         {/* Indicador de Carregamento */}
         <Container
@@ -87,20 +78,7 @@ const HomePage = () => {
 
   return (
     <>
-      {/* Header */}
-      <AppBar position="static" sx={{ marginBottom: 4 }}>
-        <Toolbar>
-          <Typography variant="h6" sx={{ flexGrow: 1 }}>
-            Taya Management
-          </Typography>
-          <Button
-            color="inherit"
-            onClick={() => dispatch(routeActions.redirectTo(routes.ADD_USER))}
-          >
-            Adicionar Usuário
-          </Button>
-        </Toolbar>
-      </AppBar>
+      <Header />
 
       {/* Conteúdo Principal */}
       <Container>
