@@ -40,13 +40,10 @@ const HomePage = () => {
 
   const handleDelete = (id) => {
     if (window.confirm("Tem certeza que deseja excluir este usuário?")) {
-      // Dispatch para deletar o usuário
-      dispatch(homeActions.deleteUser.request(id));
-      setSnackbar({
-        open: true,
-        message: "Usuário excluído com sucesso!",
-        severity: "success",
-      });
+      dispatch(homeActions.deleteUser.request({ 
+        id, 
+        onSuccess: () => window.location.reload() 
+      }));
     }
   };
 
@@ -83,9 +80,6 @@ const HomePage = () => {
           }}
         >
           <CircularProgress size={60} color="primary" />
-          <Typography variant="h6" sx={{ mt: 2 }}>
-            Carregando usuários...
-          </Typography>
         </Container>
       </>
     );

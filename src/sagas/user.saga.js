@@ -7,7 +7,6 @@ import {
 } from "../reducers/routes.actions";
 import { actions } from "../reducers/user.actions";
 import { request } from "../utils/api";
-import usersMock from "./users.mock";
 import { calculateAge } from "../utils/ageCalculator";
 
 function* userRouteWatcher() {
@@ -24,10 +23,8 @@ const loadUser = asyncFlow({
   },
   api: (values) => {
     return request({
-      url: `/usuario/${values.id}`,
+      url: `/usuarios/${values.id}`,
       method: "get",
-      isMock: true,
-      mockResult: usersMock.find((u) => u.id === values.id) ?? null,
     });
   },
   preSuccess: function* ({ response }) {
@@ -52,11 +49,15 @@ const saveUser = asyncFlow({
   },
   api: ({ id, ...values }) => {
     return request({
-      url: `/usuario/${id}`,
+      url: `/usuarios/${id}`,
       method: "put",
-      body: values,
-      isMock: true,
-      mockResult: {},
+      body: {
+        nome: values.nome,
+        dataNascimento: values.dataNascimento.toISOString().split('T')[0],
+        cep: values.cep,
+        cidade: values.cidade,
+        uf: values.uf
+      },
     });
   },
   postSuccess: function* () {

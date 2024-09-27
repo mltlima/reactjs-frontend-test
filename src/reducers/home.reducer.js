@@ -18,7 +18,8 @@ const reducer = (state = initialState, action) => {
             ? action.payload.response.data
             : [],
       };
-      case actions.deleteUser.REQUEST:
+    
+    case actions.deleteUser.REQUEST:
       return {
         ...state,
         loading: true,

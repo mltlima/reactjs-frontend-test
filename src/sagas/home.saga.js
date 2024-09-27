@@ -1,10 +1,9 @@
-import { put } from "redux-saga/effects";
+import { put, call } from "redux-saga/effects";
 import { routeWatcher } from "./routes.saga";
 import asyncFlow from "./asyncHandler";
 import { types as routes } from "../reducers/routes.actions";
 import { actions } from "../reducers/home.actions";
 import { request } from "../utils/api";
-import usersMock from "./users.mock";
 import { calculateAge } from "../utils/ageCalculator";
 
 function* homeRouteWatcher() {
@@ -19,8 +18,6 @@ const loadUsers = asyncFlow({
     return request({
       url: `/usuarios`,
       method: "get",
-      isMock: true,
-      mockResult: usersMock,
     });
   },
   preSuccess: function* ({ response }) {
@@ -29,7 +26,6 @@ const loadUsers = asyncFlow({
       idade: calculateAge(user.dataNascimento),
     }));
 
-    // Ordenar os usuários pela data de nascimento (mais velhos primeiro)
     response.data.sort((a, b) => new Date(a.dataNascimento) - new Date(b.dataNascimento));
   },
   postSuccess: function* ({ response }) {
@@ -37,23 +33,21 @@ const loadUsers = asyncFlow({
   },
 });
 
-
 const deleteUser = asyncFlow({
   actionGenerator: actions.deleteUser,
-  api: ({ id }) => {
+  api: (payload) => {
     return request({
-      url: `/usuarios/${id}`,
+      url: `/usuarios/${payload.id}`,
       method: "delete",
-      isMock: true,
-      mockResult: { success: true },
     });
   },
-  preSuccess: function* ({ payload, response }) {
-    response.id = payload.id;
+  postSuccess: function* (result) {
+    console.log("Delete successful");
+    yield call(() => window.location.reload());
   },
-  postSuccess: function* ({ payload }) {
-    console.log(`Usuário com id ${payload.id} foi excluído.`);
-  },
+  postFailure: function* (error) {
+    console.error("Delete failed:", error);
+  }
 });
 
 export const sagas = [homeRouteWatcher(), loadUsers.watcher(), deleteUser.watcher()];
