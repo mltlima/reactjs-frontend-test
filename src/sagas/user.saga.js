@@ -48,16 +48,28 @@ const saveUser = asyncFlow({
     return { id, ...payload };
   },
   api: ({ id, ...values }) => {
+    console.log("---------------------------------> values", values);
+    const cleanedValues = Object.entries(values).reduce((acc, [key, value]) => {
+      if (value !== "" && value !== null && value !== undefined) {
+        acc[key] = value;
+      }
+      return acc;
+    }, {});
+
+    if (cleanedValues.dataNascimento) {
+      if (cleanedValues.dataNascimento instanceof Date) {
+        cleanedValues.dataNascimento = cleanedValues.dataNascimento.toISOString().split('T')[0];
+      } else if (typeof cleanedValues.dataNascimento === 'string' && cleanedValues.dataNascimento.trim() !== '') {
+        cleanedValues.dataNascimento = new Date(cleanedValues.dataNascimento).toISOString().split('T')[0];
+      } else {
+        delete cleanedValues.dataNascimento;
+      }
+    }
+
     return request({
       url: `/usuarios/${id}`,
       method: "put",
-      body: {
-        nome: values.nome,
-        dataNascimento: values.dataNascimento.toISOString().split('T')[0],
-        cep: values.cep,
-        cidade: values.cidade,
-        uf: values.uf
-      },
+      body: cleanedValues,
     });
   },
   postSuccess: function* () {
