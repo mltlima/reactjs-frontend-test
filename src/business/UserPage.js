@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import { actions } from "../reducers/user.actions";
 import { ControlledTextField } from "../components/inputs";
 import ZipCodeTextField from "../components/inputs/ZipCodeTextField";
+import { fetchAddressFromCep } from "../utils/fetchZip";
 import {
   Container,
   Typography,
@@ -35,7 +36,9 @@ const UserPage = () => {
     ...data,
   };
   const formProps = {
-    ...useForm(),
+    ...useForm({
+      defaultValues: initialValues,
+    }),
     rules,
     initialValues,
   };
@@ -54,6 +57,24 @@ const UserPage = () => {
       return;
     }
     setSnackbar({ ...snackbar, open: false });
+  };
+
+  const handleCepBlur = async (value) => {
+    const cep = value.replace(/\D/g, "");
+
+    if (cep.length !== 8) {
+      setSnackbar({
+        open: true,
+        message: "CEP inválido. Deve conter 8 dígitos.",
+        severity: "error",
+    });
+    } else {
+      const address = await fetchAddressFromCep(cep);
+      console.log(address);
+      formProps.setValue("cidade", address.cidade);
+      formProps.setValue("uf", address.uf);
+      return;
+    }
   };
 
   if (loading) {
@@ -108,6 +129,7 @@ const UserPage = () => {
                 formProps={formProps} 
                 InputComponent={ZipCodeTextField}
                 fullWidth
+                onBlur={handleCepBlur}
               />
             </Grid>
             <Grid item xs={12} sm={8}>
@@ -116,6 +138,7 @@ const UserPage = () => {
                 name="cidade"
                 formProps={formProps}
                 fullWidth
+                disabled
               />
             </Grid>
             <Grid item xs={12} sm={4}>
@@ -124,6 +147,7 @@ const UserPage = () => {
                 name="uf" 
                 formProps={formProps}
                 fullWidth
+                disabled
               />
             </Grid>
           </Grid>
