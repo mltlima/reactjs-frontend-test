@@ -81,7 +81,6 @@ const UserPage = () => {
       });
     } else {
       const address = await fetchAddressFromCep(cep);
-      console.log(address);
       formProps.setValue("cidade", address.cidade);
       formProps.setValue("uf", address.uf);
       return;

@@ -30,13 +30,13 @@ const loadUser = asyncFlow({
   preSuccess: function* ({ response }) {
     const user = response.data;
     if (user) {
-      response.data = {
+      yield response.data = {
         ...user,
         idade: calculateAge(user.dataNascimento),
       };
     }
   },
-  postSuccess: function* ({ response }) {
+  postSuccess: function ({ response }) {
     console.log({ user: response.data });
   },
 });

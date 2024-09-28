@@ -21,14 +21,14 @@ const loadUsers = asyncFlow({
     });
   },
   preSuccess: function* ({ response }) {
-    response.data = response.data.map((user) => ({
+    response.data = yield response.data.map((user) => ({
       ...user,
       idade: calculateAge(user.dataNascimento),
     }));
 
-    response.data.sort((a, b) => new Date(a.dataNascimento) - new Date(b.dataNascimento));
+    response.data = yield response.data.sort((a, b) => new Date(a.dataNascimento) - new Date(b.dataNascimento));
   },
-  postSuccess: function* ({ response }) {
+  postSuccess: ({ response }) => {
     console.log({ users: response.data });
   },
 });
@@ -45,7 +45,7 @@ const deleteUser = asyncFlow({
     console.log("Delete successful");
     yield call(() => window.location.reload());
   },
-  postFailure: function* (error) {
+  postFailure: function (error) {
     console.error("Delete failed:", error);
   }
 });
