@@ -14,6 +14,10 @@ const reducer = (state = initialState, action) => {
         ...initialState,
         id: action.payload.id,
       };
+    case routes.ADD_USER:
+      return {
+        ...initialState,
+      };
     case actions.loadUser.REQUEST:
     case actions.loadUser.SUCCESS:
     case actions.loadUser.FAILURE:
@@ -24,6 +28,10 @@ const reducer = (state = initialState, action) => {
           action.type === actions.loadUser.SUCCESS
             ? action.payload.response.data
             : null,
+      };
+    case actions.clearUserData.type:
+      return {
+        ...initialState,
       };
     default:
       return state;
