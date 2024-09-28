@@ -7,13 +7,14 @@ import { types as routes } from "./reducers/routes.actions";
 const routePages = {
   [routes.HOME]: Pages.HomePage,
   [routes.USER]: Pages.UserPage,
-
+  [routes.ADD_USER]: Pages.UserPage,
   [NOT_FOUND]: Pages.HomePage,
 };
 
 const routePaths = {
   [routes.HOME]: "/",
   [routes.USER]: "/user/:id",
+  [routes.ADD_USER]: "/user/add",
 };
 
 const { reducer, middleware, enhancer } = connectRoutes(routePaths, {

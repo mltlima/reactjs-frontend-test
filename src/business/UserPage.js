@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useForm } from "react-hook-form";
 import { actions } from "../reducers/user.actions";
@@ -17,10 +17,14 @@ import {
   Alert,
 } from "@mui/material";
 import Header from "./Header";
+import { types as routes } from "../reducers/routes.actions";
 
 const UserPage = () => {
   const dispatch = useDispatch();
   const { loading, data, id } = useSelector((state) => state.user);
+  const { type } = useSelector((state) => state.location);
+  const isAdding = type === routes.ADD_USER;
+
   const [snackbar, setSnackbar] = useState({
     open: false,
     message: "",
@@ -44,11 +48,17 @@ const UserPage = () => {
     initialValues,
   };
 
+  useEffect(() => {
+    if (id && !isAdding) {
+      dispatch(actions.loadUser.request(id));
+    }
+  }, [id, isAdding, dispatch]);
+
   const handleSubmit = (values) => {
-    dispatch(actions.saveUser.request(values));
+    dispatch(actions.saveUser.request(isAdding ? values : { id, ...values }));
     setSnackbar({
       open: true,
-      message: "Usuário salvo com sucesso!",
+      message: isAdding ? "Usuário adicionado com sucesso!" : "Usuário atualizado com sucesso!",
       severity: "success",
     });
   };
@@ -68,7 +78,7 @@ const UserPage = () => {
         open: true,
         message: "CEP inválido. Deve conter 8 dígitos.",
         severity: "error",
-    });
+      });
     } else {
       const address = await fetchAddressFromCep(cep);
       console.log(address);
@@ -91,7 +101,7 @@ const UserPage = () => {
       >
         <CircularProgress size={60} color="primary" />
         <Typography variant="h6" sx={{ mt: 2 }}>
-          Carregando usuário...
+          {isAdding ? "Preparando formulário..." : "Carregando usuário..."}
         </Typography>
       </Container>
     );
@@ -103,7 +113,7 @@ const UserPage = () => {
     <Container maxWidth="md" sx={{ mt: 4 }}>
       <Paper elevation={3} sx={{ p: 4 }}>
         <Typography variant="h4" gutterBottom>
-          {id ? `Editar Usuário #${id}` : "Adicionar Novo Usuário"}
+          {isAdding ? "Adicionar Novo Usuário" : `Editar Usuário #${id}`}
         </Typography>
         <form onSubmit={formProps.handleSubmit(handleSubmit)}>
           <Grid container spacing={3}>
@@ -161,7 +171,7 @@ const UserPage = () => {
               color="primary" 
               size="large"
             >
-              {id ? "Atualizar" : "Adicionar"}
+              {isAdding ? "Adicionar" : "Atualizar"}
             </Button>
           </Box>
         </form>

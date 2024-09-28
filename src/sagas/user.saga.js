@@ -65,11 +65,19 @@ const saveUser = asyncFlow({
       }
     }
 
-    return request({
-      url: `/usuarios/${id}`,
-      method: "put",
-      body: cleanedValues,
-    });
+    if (id) {
+      return request({
+        url: `/usuarios/${id}`,
+        method: "put",
+        body: cleanedValues,
+      });
+    } else {
+      return request({
+        url: `/usuarios`,
+        method: "post",
+        body: cleanedValues,
+      });
+    }
   },
   postSuccess: function* () {
     yield put(routeActions.redirectTo(routes.HOME));
